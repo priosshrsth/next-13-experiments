@@ -7,7 +7,6 @@
   },
   "engineStrict": true,
   "scripts": {
-    "predev": "prisma generate",
     "prebuild": "prisma generate",
     "dev": "next dev",
     "build": "next build",
