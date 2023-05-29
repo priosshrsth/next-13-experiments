@@ -1,5 +1,6 @@
 import "src/app/globals.css";
 import { Inter } from "next/font/google";
+import classNames from "classnames";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,12 +11,17 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  header,
 }: {
   children: React.ReactNode;
+  header: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={classNames(inter.className, "min-h-screen")}>
+        <header className={"mainHeader"}>{header}</header>
+        {children}
+      </body>
     </html>
   );
 }
