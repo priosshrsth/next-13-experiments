@@ -1,0 +1,64 @@
+{
+  "name": "next-13",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "^20"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "prebuild": "prisma generate",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint:next": "next lint",
+    "format": "NODE_ENV=production prettier --write \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
+    "format-check": "NODE_ENV=production prettier --check \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
+    "lint": "NODE_ENV=production eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore --fix",
+    "tsc": "ENV=production node ./node_modules/typescript/bin/tsc",
+    "debug": "node --inspect ./node_modules/next/dist/bin/next",
+    "debug-local": "node --inspect ./node_modules/next/dist/bin/next dev -p 4005",
+    "postinstall": "husky install"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "npm run format --write",
+      "npm run lint"
+    ],
+    "*.{scss,css}": [
+      "npm run format --write"
+    ]
+  },
+  "dependencies": {
+    "@prisma/client": "^4.14.1",
+    "classnames": "^2.3.2",
+    "next": "^13.4.4",
+    "postcss": "8.4.23",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.1.5"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.1",
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "20.2.3",
+    "@types/react": "^18.2.7",
+    "@types/react-dom": "^18.2.4",
+    "autoprefixer": "10.4.14",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.3",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-no-relative-import-paths": "^1.5.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
+    "prisma": "^4.14.1",
+    "tailwindcss": "3.3.2",
+    "ts-node": "^10.9.1",
+    "typescript": "5.0.4"
+  }
+}
