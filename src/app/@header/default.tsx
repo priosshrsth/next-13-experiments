@@ -108,7 +108,7 @@ const MenuLink: React.FC<{ link: ILink }> = ({ link }) => {
         )}
       </Link>
       {hasSubLinks && (
-        <ul className="hidden group-hover:block pl-6 absolute w-full min-w-[190px] bg-gray-900">
+        <ul className="hidden group-hover:block pl-6 py-6 absolute w-full min-w-[190px] bg-gray-900">
           {link.subLinks?.map((subLink) => (
             <MenuLink key={subLink.path} link={subLink} />
           ))}

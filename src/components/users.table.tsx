@@ -31,9 +31,14 @@ export type IUser = {
 };
 
 interface IProps {
-  users: IUser[];
+  // users: IUser[];
 }
-export default function UserTable({ users }: IProps) {
+export default async function UserTable({}: IProps) {
+  const users = await fetch("https://jsonplaceholder.typicode.com/users")
+    .then((response) => response.json())
+    .then((json) => {
+      return json as IUser[];
+    });
   return (
     <div className="container mx-auto">
       <table className="min-w-full border border-gray-300">

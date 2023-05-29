@@ -14,8 +14,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const _theme = cookieStore.get("theme");
+  const _cookieStore = cookies();
   return (
     <div>
       <h1>This is SSR Page Using cookie()</h1>

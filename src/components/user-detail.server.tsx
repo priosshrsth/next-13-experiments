@@ -1,5 +1,5 @@
 import prismaClient from "prisma/client";
-import UserCard from "src/components/user-card.client";
+import UserCard from "src/components/user-card";
 import classNames from "classnames";
 
 interface IProps {
