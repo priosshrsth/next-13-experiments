@@ -5,7 +5,6 @@ import UserCard from "src/components/user-card";
 import Article from "src/components/article";
 import { Suspense } from "react";
 import classNames from "classnames";
-import useSWR from "swr";
 
 interface IProps {
   users?: User[];
@@ -16,19 +15,15 @@ interface IProps {
 export async function fetcher<JSON = any>(
   input: RequestInfo,
   init?: RequestInit
-): Promise<User[]> {
-  const res = await fetch(input, {
-    cache: "no-store",
-    next: { revalidate: false },
-  });
-  return ((await res.json()) as { data: User[] }).data;
+) {
+  const res = await fetch(input, init);
+  return (await res.json()) as User[];
 }
 
-async function RawUserClientPage({ className }: Omit<IProps, "users">) {
-  const { data, isLoading, error } = useSWR("/api/users", fetcher);
-
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
+  const data = await fetch(process.env.NEXT_PUBLIC_API_URL || "", config).then(
+    (res) => res.json() as Promise<User[]>
+  );
   if (!data) return <div>no data!</div>;
 
   return (
