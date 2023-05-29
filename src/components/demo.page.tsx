@@ -3,8 +3,9 @@
 import { User } from "@prisma/client";
 import UserCard from "src/components/user-card";
 import Article from "src/components/article";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import classNames from "classnames";
+import useSWR from "swr";
 
 interface IProps {
   users?: User[];
@@ -21,9 +22,15 @@ export async function fetcher<JSON = any>(
 }
 
 async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
-  const data = await fetch(process.env.NEXT_PUBLIC_API_URL || "", config).then(
-    (res) => res.json() as Promise<User[]>
+  const { data, isLoading, error, mutate } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
   );
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
   if (!data) return <div>no data!</div>;
 
   return (
