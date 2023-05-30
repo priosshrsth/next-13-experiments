@@ -5,7 +5,7 @@ import UserCard from "src/components/user-card";
 import Article from "src/components/article";
 import { Suspense } from "react";
 import classNames from "classnames";
-import superjson from "superjson";
+import { usePathname } from "next/navigation";
 
 interface IProps {
   users?: User[];
@@ -21,6 +21,9 @@ export async function fetcher<JSON = any>(
   return (await res.json()) as User[];
 }
 
+declare global {
+  var users: Record<string, User[]>;
+}
 async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
   // const { data, isLoading, error, mutate } = useSWR(
   //   process.env.NEXT_PUBLIC_API_URL,
@@ -32,17 +35,16 @@ async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
   // if (error) return <div>failed to load</div>;
   // if (isLoading) return <div>loading...</div>;
   // if (!data) return <div>no data!</div>;
+  const pathname = usePathname();
   let users: User[] = [];
-  if (typeof localStorage !== "undefined") {
-    if (localStorage.getItem("users")) {
-      users = superjson.parse(localStorage.getItem("users") || "[]");
-    }
-  }
-  if (!users.length) {
+  if (!!globalThis.users?.[pathname]?.length) {
+    users = globalThis.users?.[pathname];
+  } else {
     users = await fetcher(process.env.NEXT_PUBLIC_API_URL || "");
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("users", superjson.stringify(users));
+    if (!globalThis.users) {
+      globalThis.users = {};
     }
+    globalThis.users[pathname] = users;
   }
 
   return (
