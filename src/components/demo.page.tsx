@@ -3,9 +3,9 @@
 import { User } from "@prisma/client";
 import UserCard from "src/components/user-card";
 import Article from "src/components/article";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import classNames from "classnames";
-import useSWR from "swr";
+import superjson from "superjson";
 
 interface IProps {
   users?: User[];
@@ -22,16 +22,28 @@ export async function fetcher<JSON = any>(
 }
 
 async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
-  const { data, isLoading, error, mutate } = useSWR(
-    process.env.NEXT_PUBLIC_API_URL,
-    fetcher,
-    {
-      revalidateOnFocus: false,
+  // const { data, isLoading, error, mutate } = useSWR(
+  //   process.env.NEXT_PUBLIC_API_URL,
+  //   fetcher,
+  //   {
+  //     revalidateOnFocus: false,
+  //   }
+  // );
+  // if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>loading...</div>;
+  // if (!data) return <div>no data!</div>;
+  let users: User[] = [];
+  if (typeof localStorage !== "undefined") {
+    if (localStorage.getItem("users")) {
+      users = superjson.parse(localStorage.getItem("users") || "[]");
     }
-  );
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-  if (!data) return <div>no data!</div>;
+  }
+  if (!users.length) {
+    users = await fetcher(process.env.NEXT_PUBLIC_API_URL || "");
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("users", superjson.stringify(users));
+    }
+  }
 
   return (
     <div
@@ -41,7 +53,7 @@ async function RawUserClientPage({ className, config }: Omit<IProps, "users">) {
       )}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-        {data.map((user) => (
+        {users.map((user) => (
           <UserCard user={user} key={user.id} />
         ))}
       </div>
